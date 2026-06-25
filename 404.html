@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>الصفحة غير موجودة — شاورما الشامي</title>
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Cairo', sans-serif; background: #111; color: #F7F1E6;
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 2rem;
+    }
+    .emoji { font-size: 6rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+    h1 { font-size: 4rem; font-weight: 900; color: #D4AF37; line-height: 1; }
+    h2 { font-size: 1.5rem; font-weight: 700; margin-top: .5rem; color: #F7F1E6; }
+    p { color: rgba(247,241,230,.6); margin-top: 1rem; font-size: 1rem; max-width: 400px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      margin-top: 2rem; padding: .8rem 2rem; border-radius: 14px;
+      background: linear-gradient(135deg, #D4AF37, #e7cd77, #c79a25);
+      color: #111; font-family: 'Cairo'; font-weight: 800; font-size: 1rem;
+      text-decoration: none; transition: all .25s;
+      box-shadow: 0 8px 24px -8px rgba(212,175,55,.6);
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 14px 32px -8px rgba(212,175,55,.75); }
+    .logo { margin-bottom: 2rem; }
+    .logo img { height: 64px; width: 64px; border-radius: 16px; }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <a href="index.html"><img src="assets/logo.png" alt="شاورما الشامي"></a>
+  </div>
+  <div class="emoji">🍽️</div>
+  <h1>404</h1>
+  <h2>الصفحة مش موجودة!</h2>
+  <p>يبدو إنك ضعت في الطريق… بس أكلنا موجود! 😄 ارجع للصفحة الرئيسية واطلب وجبتك.</p>
+  <a href="index.html" class="btn">🏠 الرئيسية</a>
+</body>
+</html>

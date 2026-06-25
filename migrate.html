@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تهيئة بيانات الشامي</title>
+  <style>
+    body { font-family: 'Cairo', Tahoma, sans-serif; background: #111; color: #F7F1E6; padding: 40px; text-align: center; direction: rtl; }
+    .card { background: #1c1c1c; border: 1px solid rgba(212,175,55,.2); border-radius: 24px; padding: 2rem; max-width: 520px; margin: 0 auto; }
+    h1 { color: #D4AF37; font-size: 1.5rem; }
+    p { color: #888; margin-bottom: 1rem; font-size: .9rem; }
+    button { background: linear-gradient(135deg,#D4AF37,#e7cd77); color: #111; border: none; border-radius: 14px; padding: 1rem 2rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin: 1rem 0; width: 100%; }
+    button:hover { transform: translateY(-2px); }
+    button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .step { padding: .5rem; border-radius: 8px; font-weight: 600; font-size: .9rem; margin: .3rem 0; }
+    .success { background: rgba(34,197,94,.15); color: #22c55e; }
+    .error { background: rgba(239,68,68,.15); color: #ef4444; }
+    .info { background: rgba(212,175,55,.15); color: #D4AF37; }
+    a { color: #D4AF37; font-weight: 700; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .instructions { text-align: right; font-size: .85rem; color: #aaa; margin: 1rem 0; padding: 1rem; background: rgba(255,255,255,.03); border-radius: 12px; }
+    .instructions li { margin: .5rem 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🍽️ تهيئة بيانات شاورما الشامي</h1>
+    <p>اضغط الزر لرفع المنيو والأقسام والإعدادات والكوبونات إلى Firebase</p>
+    
+    <button id="migrateBtn">🚀 بدء الرفع</button>
+    <div id="status"></div>
+    
+    <div class="instructions">
+      <strong>ملاحظة:</strong> لو ظهر خطأ صلاحيات، اعمل الآتي:
+      <ol>
+        <li>افتح <a href="https://console.firebase.google.com/project/alshami-733a1/database/alshami-733a1-default-rtdb/rules" target="_blank">Firebase Console > Rules</a></li>
+        <li>غير <code>".write": "auth != null"</code> إلى <code>".write": true</code> للمسارات menu, categories, settings, coupons</li>
+        <li>شغل الأداة دي تاني</li>
+        <li>بعد كده رجع القواعد زي ما كانت</li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const CATEGORIES = [
+      { id: 'all', name: 'الكل', icon: '🍽️' },
+      { id: 'shawarma', name: 'سندوتشات شاورما', icon: '🌯' },
+      { id: 'western', name: 'سندوتشات غربي', icon: '🍔' },
+      { id: 'potato', name: 'سندوتشات بطاطس', icon: '🍟' },
+      { id: 'crepe', name: 'الكريب', icon: '🥙' },
+      { id: 'meals', name: 'الوجبات', icon: '🍗' },
+      { id: 'shawarma_meals', name: 'وجبات الشاورما', icon: '🥘' },
+      { id: 'fattah', name: 'الفتة الشامية', icon: '🫕' },
+      { id: 'weight', name: 'شاورما بالوزن', icon: '⚖️' },
+      { id: 'appetizers', name: 'المقبلات', icon: '🥗' },
+      { id: 'sweet', name: 'كريب حلو', icon: '🍫' },
+      { id: 'extras', name: 'الإضافات', icon: '➕' },
+    ];
+    const MEALS = [
+      { id: 's1', name: 'شاورما فراخ سوري', desc: 'شاورما فراخ طازجة بالخبز السوري مع صوص الثومية', price: 75, priceL: 85, cat: 'shawarma', img: 'assets/shawarma_souri.jpeg', best: true, sizes: ['عادي', 'كبير'] },
+      { id: 's2', name: 'شاورما فراخ موتزاريلا', desc: 'شاورما فراخ مع جبنة موتزاريلا ذايبة', price: 85, priceL: 95, cat: 'shawarma', img: 'assets/shawarma_arabi.jpeg', best: true, sizes: ['عادي', 'كبير'] },
+      { id: 's3', name: 'شاورما فراخ شيدر', desc: 'شاورما فراخ مع جبنة شيدر كريمية', price: 85, priceL: 95, cat: 'shawarma', img: 'assets/shawarma_souri.jpeg', best: false, sizes: ['عادي', 'كبير'] },
+      { id: 'w1', name: 'ساندوتش كريسبي', desc: 'قطع دجاج كريسبي مقرمشة في ساندوتش طازج', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w2', name: 'ساندوتش زنجر', desc: 'ساندوتش زنجر حار بالتتبيلة المميزة', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w3', name: 'ساندوتش بانيه', desc: 'بانيه فراخ مقرمش في خبز طازج', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w4', name: 'ساندوتش فاهيتا فراخ', desc: 'فاهيتا فراخ بالفلفل الألوان والصوص', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w5', name: 'ساندوتش برجر لحمة', desc: 'برجر لحمة طازجة مشوية على الفحم', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w6', name: 'ساندوتش برجر فراخ', desc: 'برجر فراخ مقرمش مع صوص خاص', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w7', name: 'ساندوتش كبده لحم', desc: 'كبده لحم بالتتبيلة المصرية', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w8', name: 'ساندوتش سجق', desc: 'سجق مشوي في خبز طازج', price: 60, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'w9', name: 'ساندوتش سوسيس', desc: 'سوسيس مشوي مع صوص مميز', price: 50, cat: 'western', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'p1', name: 'بطاطس سوري', desc: 'بطاطس مقرمشة مع صوص الثومية بالطريقة السورية', price: 25, cat: 'potato', img: 'assets/cheese_fries.jpeg', best: false },
+      { id: 'p2', name: 'بطاطس موتزاريلا سوري', desc: 'بطاطس سوري مع جبنة موتزاريلا ذايبة', price: 35, cat: 'potato', img: 'assets/cheese_fries.jpeg', best: true },
+      { id: 'p3', name: 'بطاطس شيدر سوري', desc: 'بطاطس سوري مع جبنة شيدر كريمية', price: 35, cat: 'potato', img: 'assets/cheese_fries.jpeg', best: false },
+      { id: 'p4', name: 'سندوتش شاورما بطاطس', desc: 'سندوتش شاورما فراخ مع بطاطس مقرمشة', price: 60, cat: 'potato', img: 'assets/cheese_fries.jpeg', best: false },
+      { id: 'c1', name: 'كريب بطاطس', desc: 'كريب محشو بطاطس مقرمشة وصوص', price: 50, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c2', name: 'كريب بطاطس + رومي', desc: 'كريب بطاطس مع جبنة رومي', price: 70, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c3', name: 'كريب جبنة موزاريلا', desc: 'كريب محشو جبنة موزاريلا ذايبة', price: 70, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c4', name: 'كريب جبنة رومي', desc: 'كريب محشو جبنة رومي مميزة', price: 80, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c5', name: 'كريب ميكس جبن', desc: 'كريب محشو ميكس جبن (موزاريلا + رومي + شيدر)', price: 100, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c6', name: 'كريب كريسبي', desc: 'كريب محشو قطع دجاج كريسبي مقرمشة', price: 90, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: true },
+      { id: 'c7', name: 'كريب زينجر', desc: 'كريب محشو زينجر حار مع صوص', price: 90, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c8', name: 'كريب شاورما فراخ', desc: 'كريب محشو شاورما فراخ مع ثومية', price: 80, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: true },
+      { id: 'c9', name: 'كريب برجر فراخ', desc: 'كريب محشو برجر فراخ مقرمش', price: 80, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c10', name: 'كريب برجر لحمة', desc: 'كريب محشو برجر لحمة طازجة', price: 110, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c11', name: 'كريب سجق', desc: 'كريب محشو سجق مشوي مع صوص', price: 110, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c12', name: 'كريب لحمة مفرومة', desc: 'كريب محشو لحمة مفرومة متبلة', price: 110, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c13', name: 'كريب فاهيتا', desc: 'كريب محشو فاهيتا فراخ بالفلفل', price: 90, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c14', name: 'كريب تشيكن باريكيو', desc: 'كريب محشو دجاج باربيكيو مميز', price: 100, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c15', name: 'كريب تشيكن رانش', desc: 'كريب محشو دجاج مع صوص الرانش', price: 100, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c16', name: 'كريب ميكس لحوم', desc: 'كريب محشو ميكس لحوم متنوعة', price: 100, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'c17', name: 'كريب الشامي', desc: 'كريب الشامي المميز — الأشهر عندنا', price: 120, cat: 'crepe', img: 'assets/shawarma_arabi.jpeg', best: true },
+      { id: 'ml1', name: 'وجبة كريسبي ٣ قطع', desc: 'أرز + بطاطس + ثومية + مخلل + عيش', price: 130, cat: 'meals', img: 'assets/mixed_grill.jpeg', best: true },
+      { id: 'ml2', name: 'وجبة كريسبي ٥ قطع', desc: 'أرز + بطاطس + ثومية + مخلل + عيش', price: 200, cat: 'meals', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'ml3', name: 'وجبة زنجر ٣ قطع', desc: 'أرز + بطاطس + ثومية + مخلل + عيش', price: 130, cat: 'meals', img: 'assets/mixed_grill.jpeg', best: true },
+      { id: 'ml4', name: 'وجبة زنجر ٥ قطع', desc: 'أرز + بطاطس + ثومية + مخلل + عيش', price: 200, cat: 'meals', img: 'assets/mixed_grill.jpeg', best: false },
+      { id: 'sm1', name: 'ماريا', desc: 'وجبة ماريا المميزة مع الشاورما', price: 120, cat: 'shawarma_meals', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'sm2', name: 'بوكس عربي دبل', desc: 'بوكس شاورما عربي دبل الحجم', price: 180, cat: 'shawarma_meals', img: 'assets/shawarma_arabi.jpeg', best: true },
+      { id: 'sm3', name: 'شاورما عربي', desc: 'وجبة شاورما عربي كاملة مع الإضافات', price: 120, cat: 'shawarma_meals', img: 'assets/shawarma_arabi.jpeg', best: true },
+      { id: 'sm4', name: 'كريسبي عربي', desc: 'وجبة كريسبي عربي مع الخبز والثومية', price: 120, cat: 'shawarma_meals', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'sm5', name: 'زينجر عربي', desc: 'وجبة زينجر عربي حار مع الخبز', price: 120, cat: 'shawarma_meals', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'f1', name: 'فتة شاورما فراخ', desc: 'فتة بخبز مقرمش مع شاورما فراخ وصوص', price: 90, priceL: 120, cat: 'fattah', img: 'assets/fatteh.jpeg', best: true, sizes: ['عادي', 'كبير'] },
+      { id: 'f2', name: 'فتة كريسبي', desc: 'فتة بخبز مقرمش مع قطع كريسبي', price: 90, priceL: 120, cat: 'fattah', img: 'assets/fatteh.jpeg', best: false, sizes: ['عادي', 'كبير'] },
+      { id: 'f3', name: 'فتة زنجر', desc: 'فتة بخبز مقرمش مع قطع زنجر حار', price: 90, priceL: 120, cat: 'fattah', img: 'assets/fatteh.jpeg', best: false, sizes: ['عادي', 'كبير'] },
+      { id: 'f4', name: 'فتة بانية', desc: 'فتة بخبز مقرمش مع بانيه فراخ', price: 90, priceL: 120, cat: 'fattah', img: 'assets/fatteh.jpeg', best: false, sizes: ['عادي', 'كبير'] },
+      { id: 'f5', name: 'فتة ميكس', desc: 'فتة ميكس بخبز مقرمش — الأشهر', price: 90, priceL: 120, cat: 'fattah', img: 'assets/fatteh.jpeg', best: true, sizes: ['عادي', 'كبير'] },
+      { id: 'wt1', name: '¼ كيلو شاورما فراخ', desc: 'ربع كيلو شاورما فراخ طازجة', price: 170, cat: 'weight', img: 'assets/spit.jpeg', best: true },
+      { id: 'wt2', name: '½ كيلو شاورما فراخ', desc: 'نص كيلو شاورما فراخ طازجة — للعائلة', price: 330, cat: 'weight', img: 'assets/spit.jpeg', best: false },
+      { id: 'a1', name: 'طبق تومية', desc: 'صوص ثومية طازجة', price: 10, cat: 'appetizers', img: 'assets/hummus.jpeg', best: false },
+      { id: 'a2', name: 'طبق رز بسمتي', desc: 'أرز بسمتي مطبوخ بالزبدة', price: 40, cat: 'appetizers', img: 'assets/hummus.jpeg', best: false },
+      { id: 'a3', name: 'باكيت بطاطس', desc: 'بطاطس مقلية مقرمشة', price: 20, cat: 'appetizers', img: 'assets/cheese_fries.jpeg', best: false },
+      { id: 'a4', name: 'طبق مخلل', desc: 'مخلل مشكل طازج', price: 5, cat: 'appetizers', img: 'assets/hummus.jpeg', best: false },
+      { id: 'a5', name: 'رغيف عيش', desc: 'رغيف عيش طازج', price: 4, cat: 'appetizers', img: 'assets/hummus.jpeg', best: false },
+      { id: 'sw1', name: 'كريب حلو', desc: 'كريب حلو بالشوكولاتة والنوتيلا', price: 80, cat: 'sweet', img: 'assets/shawarma_arabi.jpeg', best: false },
+      { id: 'x1', name: 'إضافة شاورما', desc: 'إضافة شاورما فراخ على أي ساندوتش', price: 30, cat: 'extras', img: 'assets/shawarma_souri.jpeg', best: false },
+      { id: 'x2', name: 'إضافة موتزاريلا', desc: 'إضافة جبنة موتزاريلا ذايبة', price: 10, cat: 'extras', img: 'assets/cheese_fries.jpeg', best: false },
+      { id: 'x3', name: 'إضافة شيدر', desc: 'إضافة جبنة شيدر كريمية', price: 10, cat: 'extras', img: 'assets/cheese_fries.jpeg', best: false },
+      { id: 'x4', name: 'إضافة بطاطس', desc: 'إضافة بطاطس مقرمشة', price: 5, cat: 'extras', img: 'assets/cheese_fries.jpeg', best: false },
+    ];
+    const DEFAULT_SETTINGS = {
+      store_status: "open",
+      min_order: 0,
+      opening_hours: { start: "08:00", end: "03:00" },
+      delivery_zones: [
+        { id: "z1", name: "إيتاي البارود (داخل المدينة)", price: 10 },
+        { id: "z2", name: "أطراف إيتاي البارود", price: 15 },
+        { id: "z3", name: "قرى مجاورة (قريبة)", price: 25 },
+        { id: "z4", name: "قرى مجاورة (بعيدة)", price: 35 }
+      ]
+    };
+    const COUPONS = {
+      'SHAMI20': { type: 'percent', value: 20, minOrder: 0, label: 'خصم 20% على أول طلب' },
+      'SHAMI10': { type: 'percent', value: 10, minOrder: 100, label: 'خصم 10% على الطلبات فوق 100 ج.م' },
+    };
+
+    document.getElementById('migrateBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('migrateBtn');
+      const status = document.getElementById('status');
+      btn.disabled = true;
+      btn.innerText = '⏳ جاري الرفع...';
+      status.innerHTML = '';
+
+      const log = (msg, type = 'info') => {
+        status.innerHTML += `<div class="step ${type}">${msg}</div>`;
+      };
+
+      // Try anonymous auth first (if enabled in Firebase Console)
+      try {
+        if (firebase.auth && !firebase.auth().currentUser) {
+          await firebase.auth().signInAnonymously();
+        }
+      } catch (e) {
+        // Anonymous auth not enabled, continue without it
+      }
+
+      try {
+        const db = firebase.database();
+        const menuObj = {};
+        MEALS.forEach(m => menuObj[m.id] = m);
+        const catObj = {};
+        CATEGORIES.forEach(c => catObj[c.id] = c);
+
+        log('📦 رفع الأقسام...');
+        await db.ref('categories').set(catObj);
+        log('✅ تم رفع الأقسام', 'success');
+
+        log('📦 رفع المنيو...');
+        await db.ref('menu').set(menuObj);
+        log('✅ تم رفع ' + MEALS.length + ' صنف', 'success');
+
+        log('📦 رفع الإعدادات...');
+        await db.ref('settings').set(DEFAULT_SETTINGS);
+        log('✅ تم رفع الإعدادات (مناطق التوصيل، حالة المطعم)', 'success');
+
+        log('📦 رفع الكوبونات...');
+        await db.ref('coupons').set(COUPONS);
+        log('✅ تم رفع الكوبونات (SHAMI20, SHAMI10)', 'success');
+
+        log('🎉 تم تهيئة كل البيانات بنجاح!', 'success');
+        btn.innerText = '✅ تم';
+        status.innerHTML += '<div style="margin-top:1rem"><a href="admin.html">🔐 الذهاب للوحة الإدارة</a></div>';
+      } catch (err) {
+        console.error(err);
+        log('❌ فشل: ' + err.message, 'error');
+        if (err.message && err.message.includes('permission_denied')) {
+          log('⚠️ قواعد Firebase مش بتسمح بالكتابة', 'error');
+          log('📋 روح لـ <a href="https://console.firebase.google.com/project/alshami-733a1/database/alshami-733a1-default-rtdb/rules" target="_blank">Firebase Console > Rules</a>', 'info');
+          log('📋 وغير ".write": "auth != null" إلى ".write": true مؤقتاً للمسارات: menu, categories, settings, coupons', 'info');
+          log('📋 بعد الرفع، رجع القواعد زي ما كانت', 'info');
+        }
+        btn.disabled = false;
+        btn.innerText = '🔁 حاول مرة أخرى';
+      }
+    });
+  </script>
+</body>
+</html>

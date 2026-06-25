@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>تتبع طلبك — شاورما الشامي</title>
+  <meta name="description" content="تابع حالة طلبك من شاورما الشامي. أدخل رقم الطلب ورقم الموبايل لمعرفة حالة طلبك.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --darkred: #8B0000;
+      --darkred-2: #a30f0f;
+      --ink: #111111;
+      --ink-2: #1c1c1c;
+      --gold: #D4AF37;
+      --gold-soft: #e7cd77;
+      --beige: #F7F1E6;
+      --beige-2: #efe6d4;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --gray: #6b7280;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--beige);
+      color: var(--ink);
+      min-height: 100vh;
+      direction: rtl;
+      display: flex; flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: var(--gold); color: var(--ink); }
+
+    /* Header */
+    .track-header {
+      background: var(--ink);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+    }
+    .track-header a {
+      display: inline-flex; align-items: center; gap: .5rem;
+      text-decoration: none; color: var(--beige);
+    }
+    .track-header img { height: 40px; width: 40px; border-radius: 10px; object-fit: contain; }
+    .track-header span { font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 1.2rem; color: var(--gold); }
+
+    /* Main */
+    .track-main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .track-card {
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 20px 60px -20px rgba(0,0,0,.15);
+      border: 1px solid rgba(0,0,0,.06);
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .track-card-header {
+      background: linear-gradient(135deg, var(--darkred), var(--darkred-2));
+      padding: 2rem 2rem 1.5rem;
+      text-align: center;
+      color: var(--beige);
+    }
+    .track-card-header h1 {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      margin-bottom: .5rem;
+    }
+    .track-card-header p { font-size: .92rem; opacity: .85; }
+
+    .track-form {
+      padding: 2rem;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .track-label {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      margin-bottom: .3rem;
+      display: block;
+    }
+    .track-input {
+      width: 100%;
+      padding: .8rem 1rem;
+      border-radius: 14px;
+      border: 1.5px solid rgba(0,0,0,.12);
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all .2s;
+      background: rgba(247,241,230,.5);
+    }
+    .track-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,175,55,.2);
+    }
+    .track-input::placeholder { color: #999; font-weight: 400; }
+
+    .track-btn {
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      width: 100%;
+      padding: .9rem;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft), #c79a25);
+      color: var(--ink);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: all .25s;
+      box-shadow: 0 8px 24px -8px rgba(212,175,55,.5);
+    }
+    .track-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px -8px rgba(212,175,55,.65); }
+    .track-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .track-error {
+      background: rgba(239,68,68,.1);
+      color: #dc2626;
+      padding: .8rem 1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: .88rem;
+      text-align: center;
+      display: none;
+    }
+
+    /* Result */
+    .track-result {
+      display: none;
+      padding: 2rem;
+    }
+    .result-header {
+      text-align: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      margin-bottom: 1.5rem;
+    }
+    .result-order-num {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--darkred);
+    }
+
+    /* Status timeline */
+    .status-timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 2rem 0;
+      padding: 0 .5rem;
+    }
+    .status-timeline::before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      right: 40px;
+      left: 40px;
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      z-index: 0;
+    }
+    .status-timeline .progress-line {
+      position: absolute;
+      top: 24px;
+      right: 40px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--green), var(--gold));
+      border-radius: 4px;
+      z-index: 1;
+      transition: width .6s ease;
+    }
+    .timeline-step {
+      display: flex; flex-direction: column; align-items: center;
+      gap: .4rem; z-index: 2; position: relative;
+      flex: 1;
+    }
+    .timeline-icon {
+      width: 48px; height: 48px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: #e5e7eb;
+      font-size: 1.3rem;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.1);
+      transition: all .4s ease;
+    }
+    .timeline-step.active .timeline-icon {
+      background: var(--green);
+      box-shadow: 0 4px 16px rgba(34,197,94,.4);
+    }
+    .timeline-step.current .timeline-icon {
+      background: var(--gold);
+      box-shadow: 0 4px 16px rgba(212,175,55,.5);
+      animation: pulse-current 2s infinite;
+    }
+    @keyframes pulse-current {
+      0%,100% { box-shadow: 0 4px 16px rgba(212,175,55,.5); }
+      50% { box-shadow: 0 4px 24px rgba(212,175,55,.8); }
+    }
+    .timeline-label {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: .72rem;
+      color: #999;
+      text-align: center;
+      transition: color .3s;
+    }
+    .timeline-step.active .timeline-label,
+    .timeline-step.current .timeline-label { color: var(--ink); }
+
+    /* Order details */
+    .order-detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: .8rem; margin-top: 1.5rem;
+    }
+    .detail-item {
+      background: rgba(247,241,230,.6);
+      border-radius: 14px;
+      padding: .8rem 1rem;
+    }
+    .detail-item small { display: block; color: #888; font-size: .75rem; margin-bottom: .2rem; }
+    .detail-item strong { font-family: 'Cairo', sans-serif; font-weight: 700; font-size: .95rem; }
+    .detail-item.full { grid-column: 1 / -1; }
+
+    .items-list {
+      margin-top: 1.5rem;
+      border-top: 1px solid rgba(0,0,0,.08);
+      padding-top: 1rem;
+    }
+    .items-list h3 {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: .8rem;
+    }
+    .item-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .5rem 0;
+      border-bottom: 1px solid rgba(0,0,0,.04);
+      font-size: .9rem;
+    }
+    .item-row:last-child { border-bottom: none; }
+    .item-row .qty {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: var(--darkred);
+      margin-inline-start: .3rem;
+    }
+    .total-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 1rem; padding: 1rem;
+      background: linear-gradient(135deg, var(--darkred), var(--darkred-2));
+      border-radius: 14px;
+      color: var(--beige);
+    }
+    .total-row span:first-child { font-family: 'Cairo', sans-serif; font-weight: 700; }
+    .total-row span:last-child { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--gold); }
+
+    .back-btn {
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: .75rem;
+      border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 14px;
+      background: none;
+      color: var(--ink);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .back-btn:hover { border-color: var(--darkred); color: var(--darkred); }
+
+    /* Footer */
+    .track-footer {
+      text-align: center;
+      padding: 1rem;
+      color: #999;
+      font-size: .8rem;
+    }
+    .track-footer a { color: var(--darkred); text-decoration: none; font-weight: 700; }
+    .track-footer a:hover { text-decoration: underline; }
+
+    /* Cancelled status */
+    .status-cancelled-msg {
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(239,68,68,.08);
+      border-radius: 14px;
+      margin: 1rem 0;
+    }
+    .status-cancelled-msg .emoji { font-size: 2.5rem; margin-bottom: .5rem; }
+    .status-cancelled-msg p { color: #dc2626; font-weight: 700; font-family: 'Cairo', sans-serif; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="track-header">
+    <a href="index.html">
+      <img src="assets/logo.png" alt="شاورما الشامي">
+      <span>شاورما الشامي</span>
+    </a>
+  </header>
+
+  <!-- Main -->
+  <main class="track-main">
+    <div class="track-card">
+      <!-- Search Form -->
+      <div id="trackFormSection">
+        <div class="track-card-header">
+          <h1>📦 تتبع طلبك</h1>
+          <p>أدخل بيانات طلبك عشان تعرف حالته</p>
+        </div>
+        <form id="trackForm" class="track-form">
+          <div>
+            <label class="track-label">رقم الطلب</label>
+            <input type="text" id="orderNumInput" class="track-input" placeholder="مثال: 1234" dir="ltr" required autocomplete="off" style="text-align:center; font-size:1.3rem; letter-spacing:4px;">
+          </div>
+          <div>
+            <label class="track-label">رقم الموبايل</label>
+            <input type="tel" id="phoneInput" class="track-input" placeholder="01x xxxx xxxx" dir="ltr" required autocomplete="off">
+          </div>
+          <div id="trackError" class="track-error"></div>
+          <button type="submit" id="trackBtn" class="track-btn">
+            🔍 تتبع الطلب
+          </button>
+        </form>
+      </div>
+
+      <!-- Result -->
+      <div id="trackResult" class="track-result"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="track-footer">
+    <p>© <span id="year"></span> <a href="index.html">شاورما الشامي</a> — طعم أصيل.. من قلب الشام</p>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+    const $ = s => document.querySelector(s);
+
+    function escapeHTML(str) {
+      if (typeof str !== 'string') return str;
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
+    }
+    
+    // Year
+    $('#year').textContent = new Date().getFullYear();
+
+    // Pre-fill from URL params or localStorage
+    const params = new URLSearchParams(window.location.search);
+    const savedOrder = params.get('order') || '';
+    const savedPhone = params.get('phone') || '';
+    if (savedOrder) $('#orderNumInput').value = savedOrder;
+    if (savedPhone) $('#phoneInput').value = savedPhone;
+
+    // Also check localStorage for last order
+    try {
+      const lastOrder = JSON.parse(localStorage.getItem('alshami-last-order') || '{}');
+      if (!savedOrder && lastOrder.orderNumber) {
+        $('#orderNumInput').value = lastOrder.orderNumber;
+      }
+      if (!savedPhone && lastOrder.phone) {
+        $('#phoneInput').value = lastOrder.phone;
+      }
+    } catch(e) {}
+
+    // Auto-submit if both are prefilled
+    if ($('#orderNumInput').value && $('#phoneInput').value) {
+      setTimeout(() => trackOrder(), 500);
+    }
+
+    // Form submit
+    $('#trackForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      trackOrder();
+    });
+
+    function trackOrder() {
+      const orderNum = $('#orderNumInput').value.trim();
+      const phone = $('#phoneInput').value.trim();
+      const error = $('#trackError');
+      const btn = $('#trackBtn');
+
+      if (!orderNum || !phone) {
+        error.textContent = 'من فضلك أدخل رقم الطلب ورقم الموبايل';
+        error.style.display = 'block';
+        return;
+      }
+
+      error.style.display = 'none';
+      btn.innerHTML = '⏳ جاري البحث...';
+      btn.disabled = true;
+
+      if (typeof db === 'undefined' || !db) {
+        error.textContent = 'عذراً، خدمة التتبع غير متاحة حالياً. تواصل معنا على الواتساب.';
+        error.style.display = 'block';
+        btn.innerHTML = '🔍 تتبع الطلب';
+        btn.disabled = false;
+        return;
+      }
+
+      // Search by orderNumber field across all orders
+      db.ref('orders').orderByChild('orderNumber').equalTo(orderNum).limitToFirst(1).once('value')
+        .then(snapshot => {
+          btn.innerHTML = '🔍 تتبع الطلب';
+          btn.disabled = false;
+
+          if (!snapshot.exists()) {
+            error.textContent = '❌ مفيش طلب بالرقم ده أو رقم الموبايل غير صحيح.';
+            error.style.display = 'block';
+            return;
+          }
+
+          let foundOrder = null;
+          snapshot.forEach(child => {
+            const val = child.val();
+            const phoneClean = phone.replace(/\s+/g, '');
+            if (val.customer && val.customer.phone && val.customer.phone.replace(/\s+/g, '') === phoneClean) {
+              foundOrder = val;
+            }
+          });
+
+          if (!foundOrder) {
+            error.textContent = '❌ مفيش طلب بالرقم ده أو رقم الموبايل غير صحيح.';
+            error.style.display = 'block';
+            return;
+          }
+
+          // Show result
+          showOrderResult(foundOrder);
+        })
+        .catch(err => {
+          console.error('Track error:', err);
+          btn.innerHTML = '🔍 تتبع الطلب';
+          btn.disabled = false;
+          error.textContent = '⚠️ حصل مشكلة. حاول تاني بعد شوية.';
+          error.style.display = 'block';
+        });
+    }
+
+    function showOrderResult(order) {
+      $('#trackFormSection').style.display = 'none';
+      const result = $('#trackResult');
+      result.style.display = 'block';
+
+      const STATUS_MAP = {
+        new: { label: 'تم الاستلام', icon: '📋', step: 0 },
+        preparing: { label: 'جاري التحضير', icon: '👨‍🍳', step: 1 },
+        out_for_delivery: { label: 'في الطريق', icon: '🚚', step: 2 },
+        delivered: { label: 'تم التسليم', icon: '✅', step: 3 },
+        cancelled: { label: 'ملغي', icon: '❌', step: -1 },
+      };
+
+      const METHOD_MAP = { delivery: '🚚 دليفري', pickup: '🛍️ تيك أواي' };
+      const PAYMENT_MAP = { cash: '💵 كاش', vodafone: '📱 فودافون' };
+
+      const status = STATUS_MAP[order.status] || STATUS_MAP.new;
+      const isCancelled = order.status === 'cancelled';
+      const currentStep = status.step;
+
+      const steps = [
+        { icon: '📋', label: 'تم الاستلام' },
+        { icon: '👨‍🍳', label: 'جاري التحضير' },
+        { icon: '🚚', label: 'في الطريق' },
+        { icon: '✅', label: 'تم التسليم' },
+      ];
+
+      // Progress line width
+      const progressPercent = currentStep >= 0 ? (currentStep / (steps.length - 1)) * 100 : 0;
+
+      const timelineHtml = isCancelled
+        ? `<div class="status-cancelled-msg">
+            <div class="emoji">❌</div>
+            <p>تم إلغاء هذا الطلب</p>
+          </div>`
+        : `<div class="status-timeline">
+            <div class="progress-line" style="width: calc(${progressPercent}% - ${progressPercent > 0 ? '0px' : '0px'})"></div>
+            ${steps.map((s, i) => {
+              let cls = '';
+              if (i < currentStep) cls = 'active';
+              else if (i === currentStep) cls = 'current';
+              return `<div class="timeline-step ${cls}">
+                <div class="timeline-icon">${s.icon}</div>
+                <span class="timeline-label">${s.label}</span>
+              </div>`;
+            }).join('')}
+          </div>`;
+
+      const itemsHtml = (order.items || []).map(i =>
+        `<div class="item-row">
+          <span>${escapeHTML(i.name)} <span class="qty">×${i.qty}</span></span>
+          <span>${i.qty * i.price} ج.م</span>
+        </div>`
+      ).join('');
+
+      const orderTime = order.createdAt ? new Date(order.createdAt).toLocaleString('ar-EG', {
+        hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', hour12: true
+      }) : '';
+
+      let deliveryBoyHtml = '';
+      let etaHtml = '';
+
+      if (order.status === 'out_for_delivery') {
+        if (order.deliveryBoy && (order.deliveryBoy.name || order.deliveryBoy.phone)) {
+          deliveryBoyHtml = `
+            <div class="detail-item full" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <small style="color:var(--green);font-weight:bold">👨‍🚀 الطيار</small>
+                <strong style="color:var(--ink);font-size:1.1rem">${escapeHTML(order.deliveryBoy.name || 'مندوب التوصيل')}</strong>
+              </div>
+              ${order.deliveryBoy.phone ? `<a href="tel:${escapeHTML(order.deliveryBoy.phone)}" style="background:var(--green);color:#fff;padding:.4rem .8rem;border-radius:10px;text-decoration:none;font-weight:bold;font-size:.95rem;display:inline-flex;align-items:center;gap:.4rem;box-shadow:0 4px 10px rgba(34,197,94,.3)">📞 اتصال</a>` : ''}
+            </div>
+          `;
+        }
+
+        if (order.dispatchedAt && order.etaMinutes) {
+          const targetTime = order.dispatchedAt + (order.etaMinutes * 60000);
+          etaHtml = `
+            <div class="detail-item full" style="background:linear-gradient(135deg, var(--gold), var(--gold-soft));color:var(--ink);text-align:center">
+              <small style="color:rgba(0,0,0,0.7);font-weight:bold">الوقت المتوقع للوصول ⏳</small>
+              <strong style="font-size:1.8rem;font-family:'Poppins', sans-serif;display:block;margin-top:.2rem" id="etaTimer">--:--</strong>
+            </div>
+          `;
+
+          setTimeout(() => {
+            const timerEl = $('#etaTimer');
+            if (timerEl) {
+              const updateTimer = () => {
+                const now = Date.now();
+                const diff = targetTime - now;
+                if(diff <= 0) {
+                  timerEl.textContent = 'الطيار يصل الآن! 🛵';
+                  if(window.etaInterval) clearInterval(window.etaInterval);
+                } else {
+                  const m = Math.floor(diff / 60000);
+                  const s = Math.floor((diff % 60000) / 1000);
+                  timerEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                }
+              };
+              updateTimer();
+              if(window.etaInterval) clearInterval(window.etaInterval);
+              window.etaInterval = setInterval(updateTimer, 1000);
+            }
+          }, 50);
+        }
+      }
+
+      result.innerHTML = `
+        <div class="result-header">
+          <div class="result-order-num" style="font-size:2.2rem;letter-spacing:4px">${escapeHTML(order.orderNumber || '----')}</div>
+          <p style="color:#888;font-size:.85rem;margin-top:.3rem">${orderTime}</p>
+        </div>
+
+        ${timelineHtml}
+
+        <div class="order-detail-grid">
+          ${deliveryBoyHtml}
+          ${etaHtml}
+          <div class="detail-item">
+            <small>الاسم</small>
+            <strong>${escapeHTML(order.customer?.name) || '---'}</strong>
+          </div>
+          <div class="detail-item">
+            <small>طريقة الاستلام</small>
+            <strong>${METHOD_MAP[order.method] || escapeHTML(order.method || '')}</strong>
+          </div>
+          <div class="detail-item">
+            <small>الدفع</small>
+            <strong>${PAYMENT_MAP[order.payment] || escapeHTML(order.payment || '')}</strong>
+          </div>
+          <div class="detail-item">
+            <small>الحالة</small>
+            <strong>${status.icon} ${status.label}</strong>
+          </div>
+          ${order.customer?.address ? `<div class="detail-item full">
+            <small>العنوان</small>
+            <strong>📍 ${escapeHTML(order.customer.address)}</strong>
+          </div>` : ''}
+        </div>
+
+        <div class="items-list">
+          <h3>🧾 تفاصيل الطلب</h3>
+          ${itemsHtml}
+          <div class="total-row">
+            <span>الإجمالي</span>
+            <span>${order.total || 0} ج.م</span>
+          </div>
+        </div>
+
+        <button class="back-btn" onclick="location.reload()">🔙 تتبع طلب آخر</button>
+      `;
+    }
+  })();
+  </script>
+</body>
+</html>

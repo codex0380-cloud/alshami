@@ -1,0 +1,21 @@
+{
+  "name": "شاورما الشامي",
+  "short_name": "الشامي",
+  "description": "شاورما الشامي — طعم أصيل من قلب الشام. اطلب شاورما، كريب، وجبات كريسبي وزنجر",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#8B0000",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "shopping"]
+}

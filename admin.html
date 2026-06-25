@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>لوحة التحكم — شاورما الشامي</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- ============ LOGIN OVERLAY ============ -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <img src="assets/logo.png" alt="شاورما الشامي">
+      <h2>لوحة تحكم الطلبات</h2>
+      <p>ادخل كلمة السر عشان تدخل على لوحة التحكم</p>
+      <input type="password" id="loginPassword" class="login-input" placeholder="كلمة السر" autofocus>
+      <button id="loginBtn" class="login-btn">دخول 🔐</button>
+      <p id="loginError" class="login-error"></p>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div id="dashboard" style="display:none">
+
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="header-inner">
+        <div class="header-brand">
+          <img src="assets/logo.png" alt="شاورما الشامي">
+          <div>
+            <h1>لوحة تحكم الطلبات</h1>
+            <span>شاورما الشامي — إدارة الأوردرات</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="admin-tabs">
+            <button class="admin-tab active" data-view="ordersView">الطلبات</button>
+            <button class="admin-tab" data-view="menuView">إدارة المنيو</button>
+            <button class="admin-tab" data-view="reviewsView">التقييمات</button>
+            <button class="admin-tab" data-view="settingsView">الإعدادات</button>
+          </div>
+          <span class="badge-live">متصل</span>
+          <button id="soundToggle" class="btn-sound" title="تنبيه الصوت">🔔</button>
+          <a href="index.html" class="btn-back">🏠 الموقع</a>
+          <button id="logoutBtn" class="btn-logout" title="تسجيل خروج">🚪 خروج</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= ORDERS VIEW ================= -->
+    <div id="ordersView" class="view-section active">
+      <!-- Stats -->
+      <div class="stats-grid">
+      <div class="stat-box new-orders">
+        <div class="stat-icon">🆕</div>
+        <div class="stat-value" id="statNew">0</div>
+        <div class="stat-label">طلبات جديدة</div>
+      </div>
+      <div class="stat-box preparing">
+        <div class="stat-icon">👨‍🍳</div>
+        <div class="stat-value" id="statPreparing">0</div>
+        <div class="stat-label">جاري التحضير</div>
+      </div>
+      <div class="stat-box delivered">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value" id="statDelivered">0</div>
+        <div class="stat-label">تم التسليم اليوم</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">إجمالي اليوم (ج.م)</div>
+      </div>
+    </div>
+
+    <!-- Search & Date Filter Bar -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="ابحث بالاسم أو رقم الطلب أو رقم الموبايل...">
+        <button id="clearSearch" class="clear-search-btn" style="display:none">✕</button>
+      </div>
+      <div class="date-filter-wrap">
+        <select id="dateFilter" class="date-filter-select">
+          <option value="all">📅 كل الطلبات</option>
+          <option value="today" selected>📅 انهاردة</option>
+          <option value="yesterday">📅 أمبارح</option>
+          <option value="week">📅 آخر أسبوع</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-bar">
+      <button class="filter-tab active" data-filter="all">
+        الكل <span class="count" id="countAll">0</span>
+      </button>
+      <button class="filter-tab" data-filter="new">
+        🆕 جديد <span class="count" id="countNew">0</span>
+      </button>
+      <button class="filter-tab" data-filter="preparing">
+        👨‍🍳 جاري التحضير <span class="count" id="countPreparing">0</span>
+      </button>
+      <button class="filter-tab" data-filter="out_for_delivery">
+        🚚 في الطريق <span class="count" id="countOut">0</span>
+      </button>
+      <button class="filter-tab" data-filter="delivered">
+        ✅ تم التسليم <span class="count" id="countDelivered">0</span>
+      </button>
+      <button class="filter-tab" data-filter="cancelled">
+        ❌ ملغي <span class="count" id="countCancelled">0</span>
+      </button>
+    </div>
+
+    <!-- Export Button -->
+    <div style="max-width:1400px;margin:0 auto;padding:0 1.5rem .75rem;display:flex;justify-content:flex-end">
+      <button id="exportCSV" class="btn-back" style="gap:.4rem">📁 تصدير CSV</button>
+    </div>
+
+    <!-- Orders List -->
+    <div id="ordersContainer" class="orders-container">
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <h3>مفيش طلبات لسه</h3>
+        <p>الطلبات الجديدة هتظهر هنا تلقائياً مع صوت تنبيه 🔔</p>
+      </div>
+    </div>
+
+    <!-- Reports Section -->
+    <div style="max-width:1400px;margin:1.5rem auto 0;padding:0 1.5rem 1.5rem">
+      <h2 style="font-weight:900;font-size:1.3rem;color:var(--gold);margin-bottom:1rem">📊 التقارير والإحصائيات</h2>
+      <div id="reportsContent"></div>
+    </div>
+    </div> <!-- End ordersView -->
+
+    <!-- ================= MENU VIEW ================= -->
+    <div id="menuView" class="view-section">
+      <div style="max-width:1400px;margin:0 auto;padding:1.5rem">
+        <div class="flex justify-between items-center mb-4">
+          <h2 style="font-weight:900;font-size:1.3rem;color:var(--gold)">إدارة المنيو والأقسام</h2>
+          <button id="addMenuItemBtn" class="btn-primary" style="background:var(--green);color:white;padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer">➕ إضافة صنف جديد</button>
+        </div>
+        
+        <!-- Table -->
+        <div style="background:var(--bg-card);border-radius:1rem;overflow:hidden;box-shadow:0 10px 15px -3px rgba(0,0,0,0.5);border:1px solid var(--border)">
+          <table style="width:100%;border-collapse:collapse;text-align:right" id="menuTable">
+            <thead style="background:rgba(0,0,0,0.2);color:var(--gold)">
+              <tr>
+                <th style="padding:1rem">الاسم</th>
+                <th style="padding:1rem">السعر</th>
+                <th style="padding:1rem">القسم</th>
+                <th style="padding:1rem">الحالة</th>
+                <th style="padding:1rem">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="menuTbody" style="background:transparent">
+              <tr><td colspan="5" style="padding:2rem;text-align:center">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> <!-- End menuView -->
+
+    <!-- ================= ADD MENU ITEM MODAL ================= -->
+    <div id="addMenuItemModal" class="confirm-modal-overlay" style="z-index:200">
+      <div class="confirm-modal-card" style="max-width:500px">
+        <div style="margin-bottom:1.5rem">
+          <h3 id="modalTitle" style="font-weight:900;font-size:1.2rem;color:var(--gold);margin-bottom:.5rem">➕ إضافة صنف جديد</h3>
+          <p id="modalDesc" style="color:var(--text-2);font-size:.85rem">أدخل بيانات الصنف الجديد</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <input id="newItemName" class="search-input" placeholder="اسم الصنف">
+          <input id="newItemDesc" class="search-input" placeholder="وصف الصنف">
+          <div style="display:flex;gap:.5rem">
+            <input id="newItemPrice" type="number" class="search-input" placeholder="السعر" style="flex:1">
+            <input id="newItemPriceL" type="number" class="search-input" placeholder="سعر كبير (اختياري)" style="flex:1">
+          </div>
+          <select id="newItemCat" class="search-input">
+            <option value="">اختر القسم...</option>
+            <option value="shawarma">سندوتشات شاورما</option>
+            <option value="western">سندوتشات غربي</option>
+            <option value="potato">سندوتشات بطاطس</option>
+            <option value="crepe">الكريب</option>
+            <option value="meals">الوجبات</option>
+            <option value="shawarma_meals">وجبات الشاورما</option>
+            <option value="fattah">الفتة الشامية</option>
+            <option value="weight">شاورما بالوزن</option>
+            <option value="appetizers">المقبلات</option>
+            <option value="sweet">كريب حلو</option>
+            <option value="extras">الإضافات</option>
+          </select>
+          <input id="newItemImg" class="search-input" placeholder="رابط الصورة" value="assets/shawarma_arabi.jpeg">
+          <label style="display:flex;align-items:center;gap:.5rem;color:var(--text-2);font-size:.9rem">
+            <input type="checkbox" id="newItemBest"> الأكثر مبيعاً
+          </label>
+          <label style="display:flex;align-items:center;gap:.5rem;color:var(--text-2);font-size:.9rem">
+            <input type="checkbox" id="newItemSizes"> له حجمين (عادي/كبير)
+          </label>
+        </div>
+        <div class="confirm-modal-actions" style="margin-top:1.5rem">
+          <button id="saveNewItemBtn" class="confirm-yes" style="background:var(--darkred)">💾 حفظ الصنف</button>
+          <button id="cancelNewItemBtn" class="confirm-no">إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= DISPATCH MODAL ================= -->
+    <div id="dispatchModal" class="confirm-modal-overlay" style="z-index:200">
+      <div class="confirm-modal-card" style="max-width:400px">
+        <div style="margin-bottom:1.5rem">
+          <h3 style="font-weight:900;font-size:1.2rem;color:var(--gold);margin-bottom:.5rem">🚚 خروج للتوصيل</h3>
+          <p style="color:var(--text-2);font-size:.85rem">أدخل بيانات الطيار والوقت المتوقع لوصول الطلب للعميل</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div>
+            <label style="font-size:.85rem;color:var(--text-2);margin-bottom:.25rem;display:block">اسم الطيار (اختياري)</label>
+            <input id="dispatchBoyName" class="search-input" placeholder="مثال: أحمد الدليفري">
+          </div>
+          <div>
+            <label style="font-size:.85rem;color:var(--text-2);margin-bottom:.25rem;display:block">رقم موبايل الطيار (اختياري)</label>
+            <input id="dispatchBoyPhone" type="tel" class="search-input" placeholder="01x xxxx xxxx" dir="ltr">
+          </div>
+          <div>
+            <label style="font-size:.85rem;color:var(--text-2);margin-bottom:.25rem;display:block">الوقت المتوقع (بالدقائق)</label>
+            <input id="dispatchEta" type="number" class="search-input" value="30" min="5" max="120">
+          </div>
+        </div>
+        <div class="confirm-modal-actions" style="margin-top:1.5rem">
+          <button id="dispatchConfirmBtn" class="confirm-yes" style="background:var(--green)">🚚 تأكيد التوصيل</button>
+          <button id="dispatchCancelBtn" class="confirm-no">إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= REVIEWS VIEW ================= -->
+    <div id="reviewsView" class="view-section">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>إدارة التقييمات 🌟</h2>
+          <span class="badge-live" id="reviewsCountBadge">0 تقييم</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;text-align:right" id="reviewsTable">
+            <thead style="background:rgba(0,0,0,0.2);color:var(--gold)">
+              <tr>
+                <th style="padding:1rem">الاسم</th>
+                <th style="padding:1rem">التقييم</th>
+                <th style="padding:1rem">النص</th>
+                <th style="padding:1rem">التاريخ</th>
+                <th style="padding:1rem">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="reviewsTbody" style="background:transparent">
+              <tr><td colspan="5" style="padding:2rem;text-align:center">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SETTINGS VIEW ================= -->
+    <div id="settingsView" class="view-section">
+      <div style="max-width:800px;margin:0 auto;padding:1.5rem">
+        <h2 style="font-weight:900;font-size:1.3rem;color:var(--gold);margin-bottom:1.5rem">إعدادات المتجر</h2>
+        
+        <div style="background:var(--bg-card);padding:1.5rem;border-radius:1rem;box-shadow:0 4px 6px -1px rgba(0,0,0,0.3);border:1px solid var(--border);margin-bottom:1.5rem">
+          <h3 style="margin-bottom:1rem;color:var(--gold);font-weight:bold">حالة المطعم</h3>
+          <div style="display:flex;gap:1rem;align-items:center">
+            <select id="storeStatusSelect" class="search-input" style="width:200px">
+              <option value="open">🟢 المطعم مفتوح</option>
+              <option value="closed">🔴 المطعم مغلق</option>
+            </select>
+            <button id="saveStoreStatusBtn" class="btn-primary" style="background:var(--darkred);color:white;padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer">حفظ الحالة</button>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-card);padding:1.5rem;border-radius:1rem;box-shadow:0 4px 6px -1px rgba(0,0,0,0.3);border:1px solid var(--border);margin-bottom:1.5rem">
+          <div class="flex" style="justify-content:space-between; align-items:center; margin-bottom:1rem">
+            <h3 style="color:var(--gold);font-weight:bold">مناطق التوصيل ورسومها</h3>
+            <button id="addZoneBtn" class="btn-primary" style="background:var(--green);color:white;padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer;font-size:.9rem">➕ منطقة جديدة</button>
+          </div>
+          <div id="zonesList" style="display:flex;flex-direction:column;gap:.5rem">
+            جاري التحميل...
+          </div>
+          <button id="saveZonesBtn" class="btn-primary" style="margin-top:1rem;width:100%;background:var(--darkred);color:white;padding:.75rem;border-radius:.5rem;border:none;cursor:pointer;font-weight:bold">حفظ المناطق</button>
+        </div>
+
+        <!-- ===== Coupon Management ===== -->
+        <div style="background:var(--bg-card);padding:1.5rem;border-radius:1rem;box-shadow:0 4px 6px -1px rgba(0,0,0,0.3);border:1px solid var(--border)">
+          <div class="flex" style="justify-content:space-between; align-items:center; margin-bottom:1rem">
+            <h3 style="color:var(--gold);font-weight:bold">إدارة الكوبونات</h3>
+            <button id="addCouponBtn" class="btn-primary" style="background:var(--green);color:white;padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer;font-size:.9rem">➕ كود خصم جديد</button>
+          </div>
+          <div id="couponsList" style="display:flex;flex-direction:column;gap:.5rem">
+            جاري التحميل...
+          </div>
+          <button id="saveCouponsBtn" class="btn-primary" style="margin-top:1rem;width:100%;background:var(--darkred);color:white;padding:.75rem;border-radius:.5rem;border:none;cursor:pointer;font-weight:bold">حفظ الكوبونات</button>
+        </div>
+      </div>
+    </div> <!-- End settingsView -->
+
+  </div> <!-- End dashboard -->
+
+  <!-- Toast Container -->
+  <div id="adminToast" class="admin-toast"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
