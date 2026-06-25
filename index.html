@@ -54,7 +54,7 @@
     "image": "assets/hero.jpeg",
     "servesCuisine": "Syrian",
     "priceRange": "$$",
-    "telephone": "+20 114 536 6777",
+    "telephone": "+20 103 777 5765",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "حديقة الطفل - شارع تاون تيم",
@@ -80,13 +80,13 @@
   <!-- ============ NAVBAR ============ -->
   <header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-500">
     <nav class="mx-auto max-w-7xl px-4 sm:px-6">
-      <div id="navInner" class="mt-3 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 transition-all duration-500">
+      <div id="navInner" class="mt-2 sm:mt-3 flex items-center justify-between gap-2 sm:gap-3 rounded-2xl px-3 py-2 sm:px-4 sm:py-3 transition-all duration-500">
         <!-- Logo -->
-        <a href="#home" class="flex items-center gap-2 shrink-0" aria-label="شاورما الشامي">
-          <img src="assets/logo.png" alt="شاورما الشامي" class="h-12 w-12 rounded-xl object-contain shadow-lg">
+        <a href="#home" class="flex items-center gap-2 sm:gap-3 shrink-0" aria-label="شاورما الشامي">
+          <img src="assets/logo.png" alt="شاورما الشامي" class="h-10 w-10 sm:h-12 sm:w-12 rounded-xl object-contain shadow-lg">
           <span class="leading-tight">
-            <span class="block font-cairo font-black text-lg text-darkred dark:text-gold">شاورما الشامي</span>
-            <span class="block text-[10px] tracking-wide text-ink/60 dark:text-beige/60">طعم أصيل.. من قلب الشام</span>
+            <span class="block font-cairo font-black text-base sm:text-lg text-darkred dark:text-gold">شاورما الشامي</span>
+            <span class="hidden sm:block text-[10px] tracking-wide text-ink/60 dark:text-beige/60">طعم أصيل.. من قلب الشام</span>
           </span>
         </a>
 
@@ -100,24 +100,24 @@
           <li><a class="nav-link" href="#contact">تواصل معنا</a></li>
         </ul>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 sm:gap-2">
           <!-- Theme toggle -->
-          <button id="themeToggle" class="grid place-items-center h-10 w-10 rounded-xl border border-ink/10 dark:border-beige/15 hover:bg-ink/5 dark:hover:bg-beige/10 transition" aria-label="تبديل الوضع">
-            <svg class="sun h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-            <svg class="moon h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <button id="themeToggle" class="grid place-items-center h-9 w-9 sm:h-10 sm:w-10 rounded-xl border border-ink/10 dark:border-beige/15 hover:bg-ink/5 dark:hover:bg-beige/10 transition" aria-label="تبديل الوضع">
+            <svg class="sun h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+            <svg class="moon h-4 w-4 sm:h-5 sm:w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
           </button>
 
           <!-- Cart button -->
-          <button id="cartBtn" class="relative grid place-items-center h-10 w-10 rounded-xl border border-ink/10 dark:border-beige/15 hover:bg-ink/5 dark:hover:bg-beige/10 transition" aria-label="السلة">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
-            <span id="cartCount" class="absolute -top-1.5 -left-1.5 hidden min-w-5 h-5 px-1 grid place-items-center rounded-full bg-gold text-ink text-[11px] font-bold font-poppins">0</span>
+          <button id="cartBtn" class="relative grid place-items-center h-9 w-9 sm:h-10 sm:w-10 rounded-xl border border-ink/10 dark:border-beige/15 hover:bg-ink/5 dark:hover:bg-beige/10 transition" aria-label="السلة">
+            <svg class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+            <span id="cartCount" class="absolute -top-1.5 -left-1.5 hidden min-w-[18px] h-[18px] sm:min-w-[20px] sm:h-5 px-1 grid place-items-center rounded-full bg-gold text-ink text-[10px] sm:text-[11px] font-bold font-poppins">0</span>
           </button>
 
           <!-- Order CTA -->
           <a href="#menu" class="hidden sm:inline-flex btn-gold font-cairo font-bold text-[15px]">اطلب الآن</a>
 
           <!-- Mobile menu -->
-          <button id="menuBtn" class="lg:hidden grid place-items-center h-10 w-10 rounded-xl border border-ink/10 dark:border-beige/15" aria-label="القائمة">
+          <button id="menuBtn" class="lg:hidden grid place-items-center h-9 w-9 sm:h-10 sm:w-10 rounded-xl border border-ink/10 dark:border-beige/15" aria-label="القائمة">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
           </button>
         </div>
@@ -156,31 +156,31 @@
 
     <div class="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 pt-28 pb-16">
       <div class="max-w-2xl text-beige" data-reveal>
-        <span class="inline-flex items-center gap-2 rounded-full glass-gold px-4 py-1.5 text-sm font-cairo font-semibold mb-6">
+        <span class="inline-flex items-center gap-2 rounded-full glass-gold px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-cairo font-semibold mb-6">
           <span class="h-2 w-2 rounded-full bg-gold animate-pulse"></span>
           شاورما الشامي • طعم أصيل من قلب الشام ✨
         </span>
-        <h1 class="font-cairo font-black leading-[1.15] text-4xl sm:text-5xl md:text-6xl">
+        <h1 class="font-cairo font-black leading-[1.15] text-3xl sm:text-5xl md:text-6xl">
           كل اللي نفسك فيه...
           <span class="block mt-2 bg-gradient-to-l from-gold via-gold-soft to-gold bg-clip-text text-transparent">موجود في مكان واحد 🥰</span>
         </h1>
-        <p class="mt-6 text-lg sm:text-xl text-beige/85 font-tajawal leading-relaxed max-w-xl">
+        <p class="mt-4 sm:mt-6 text-base sm:text-xl text-beige/85 font-tajawal leading-relaxed max-w-xl">
           منيو مطعم الشامي كامل بين إيديك — اختار وجبتك المفضلة واطلب دلوقت 😉♥️
         </p>
 
-        <div class="mt-8 flex flex-wrap items-center gap-4">
-          <a href="#menu" class="btn-gold text-lg font-cairo font-bold px-8 py-4 shadow-2xl shadow-gold/20">
+        <div class="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+          <a href="#menu" class="btn-gold text-base sm:text-lg font-cairo font-bold px-6 py-3 sm:px-8 sm:py-4 shadow-2xl shadow-gold/20 flex-1 sm:flex-none justify-center">
             اطلب الآن
             <svg class="h-5 w-5 rtl-flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#menu" class="btn-ghost text-lg font-cairo font-bold px-8 py-4">قائمة الطعام</a>
+          <a href="#menu" class="btn-ghost text-base sm:text-lg font-cairo font-bold px-6 py-3 sm:px-8 sm:py-4 flex-1 sm:flex-none justify-center">قائمة الطعام</a>
         </div>
 
-        <div class="mt-10 flex items-center gap-4">
-          <div class="flex text-gold text-2xl tracking-tight">★★★★★</div>
-          <div class="text-beige/85 font-cairo">
+        <div class="mt-8 sm:mt-10 flex items-center gap-3 sm:gap-4">
+          <div class="flex text-gold text-xl sm:text-2xl tracking-tight">★★★★★</div>
+          <div class="text-beige/85 font-cairo text-sm sm:text-base">
             <span class="font-black text-gold counter" data-target="10000">0</span>+
-            <span class="text-sm"> عميل سعيد</span>
+            <span> عميل سعيد</span>
           </div>
         </div>
       </div>
@@ -198,23 +198,23 @@
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         <a href="#menu" class="quick-card group" data-reveal>
           <span class="quick-ico bg-darkred/10 text-darkred dark:bg-darkred/30 dark:text-gold-soft">🚚</span>
-          <span class="font-cairo font-bold text-lg">اطلب دليفري</span>
-          <span class="text-sm text-ink/60 dark:text-beige/60">توصيل لباب بيتك</span>
+          <span class="font-cairo font-bold text-base sm:text-lg">اطلب دليفري</span>
+          <span class="text-xs sm:text-sm text-ink/60 dark:text-beige/60">توصيل لباب بيتك</span>
         </a>
         <a href="#menu" class="quick-card group" data-reveal data-delay="80">
           <span class="quick-ico bg-gold/15 text-darkred dark:text-gold">🛍️</span>
-          <span class="font-cairo font-bold text-lg">اطلب تيك أواي</span>
-          <span class="text-sm text-ink/60 dark:text-beige/60">جاهز عند وصولك</span>
+          <span class="font-cairo font-bold text-base sm:text-lg">اطلب تيك أواي</span>
+          <span class="text-xs sm:text-sm text-ink/60 dark:text-beige/60">جاهز عند وصولك</span>
         </a>
         <a href="https://wa.me/201037775765?text=أهلاً، عايز أطلب من الشامي" target="_blank" rel="noopener" class="quick-card group" data-reveal data-delay="160">
           <span class="quick-ico bg-green-500/15 text-green-600 dark:text-green-400">📱</span>
-          <span class="font-cairo font-bold text-lg">عبر واتساب</span>
-          <span class="text-sm text-ink/60 dark:text-beige/60">رد فوري</span>
+          <span class="font-cairo font-bold text-base sm:text-lg">عبر واتساب</span>
+          <span class="text-xs sm:text-sm text-ink/60 dark:text-beige/60">رد فوري</span>
         </a>
         <a href="#delivery" class="quick-card group" data-reveal data-delay="240">
           <span class="quick-ico bg-darkred/10 text-darkred dark:bg-darkred/30 dark:text-gold-soft">📍</span>
-          <span class="font-cairo font-bold text-lg">أقرب فرع</span>
-          <span class="text-sm text-ink/60 dark:text-beige/60">اعرف مناطقنا</span>
+          <span class="font-cairo font-bold text-base sm:text-lg">أقرب فرع</span>
+          <span class="text-xs sm:text-sm text-ink/60 dark:text-beige/60">اعرف مناطقنا</span>
         </a>
       </div>
     </div>
@@ -446,8 +446,6 @@
           <h4 class="footer-title">تواصل معنا</h4>
           <ul class="space-y-3 text-beige/65 text-sm">
             <li class="flex items-center gap-2">📞 <a href="tel:+201037775765" class="hover:text-gold font-poppins" dir="ltr">01037775765</a></li>
-            <li class="flex items-center gap-2">📞 <a href="tel:+201038437067" class="hover:text-gold font-poppins" dir="ltr">01038437067</a></li>
-            <li class="flex items-center gap-2">📞 <a href="tel:+201037775765" class="hover:text-gold font-poppins" dir="ltr">01037775765</a></li>
             <li class="flex items-center gap-2">📍 إيتاي البارود - حديقة الطفل - شارع تاون تيم</li>
             <li class="flex items-center gap-2">🕐 يومياً من 8 صباحاً إلى 3 صباحاً</li>
           </ul>
@@ -479,11 +477,11 @@
   </footer>
 
   <!-- ============ FLOATING BUTTONS ============ -->
-  <div class="fixed bottom-5 left-4 z-40 flex flex-col gap-3">
-    <a href="https://wa.me/201145366777?text=أهلاً، عايز أطلب من الشامي" target="_blank" rel="noopener" class="float-btn bg-green-500 hover:bg-green-600" aria-label="واتساب">
+  <div class="fixed bottom-24 lg:bottom-5 left-4 z-40 flex flex-col gap-3 transition-all duration-300">
+    <a href="https://wa.me/201037775765?text=أهلاً، عايز أطلب من الشامي" target="_blank" rel="noopener" class="float-btn bg-green-500 hover:bg-green-600" aria-label="واتساب">
       <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.6-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.4.5c-.1.2-.3.3-.1.6.1.3.7 1.1 1.4 1.8.9.8 1.7 1 2 1.2.2.1.4.1.5-.1l.6-.8c.2-.2.4-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6-.1 1.1z"/></svg>
     </a>
-    <a href="tel:+201145366777" class="float-btn bg-darkred hover:bg-darkred-2" aria-label="اتصل بنا">
+    <a href="tel:+201037775765" class="float-btn bg-darkred hover:bg-darkred-2" aria-label="اتصل بنا">
       <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
     </a>
     <button id="toTop" class="float-btn bg-ink/80 hover:bg-ink text-beige opacity-0 pointer-events-none transition" aria-label="للأعلى">

@@ -269,13 +269,25 @@
         <h2 style="font-weight:900;font-size:1.3rem;color:var(--gold);margin-bottom:1.5rem">إعدادات المتجر</h2>
         
         <div style="background:var(--bg-card);padding:1.5rem;border-radius:1rem;box-shadow:0 4px 6px -1px rgba(0,0,0,0.3);border:1px solid var(--border);margin-bottom:1.5rem">
-          <h3 style="margin-bottom:1rem;color:var(--gold);font-weight:bold">حالة المطعم</h3>
-          <div style="display:flex;gap:1rem;align-items:center">
-            <select id="storeStatusSelect" class="search-input" style="width:200px">
-              <option value="open">🟢 المطعم مفتوح</option>
-              <option value="closed">🔴 المطعم مغلق</option>
-            </select>
-            <button id="saveStoreStatusBtn" class="btn-primary" style="background:var(--darkred);color:white;padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer">حفظ الحالة</button>
+          <h3 style="margin-bottom:1rem;color:var(--gold);font-weight:bold">مواعيد وحالة المطعم</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end">
+            <div>
+              <label style="font-size:.85rem;color:var(--text-2);margin-bottom:.25rem;display:block">حالة المطعم الآن</label>
+              <select id="storeStatusSelect" class="search-input" style="width:250px">
+                <option value="open">⏱️ يفتح تلقائياً (حسب المواعيد)</option>
+                <option value="always_open">🟢 مفتوح دائماً (تجاهل المواعيد)</option>
+                <option value="closed">🔴 مغلق دائماً</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:.85rem;color:var(--text-2);margin-bottom:.25rem;display:block">تلقائي من الساعة</label>
+              <input type="time" id="openTimeStart" class="search-input" value="08:00">
+            </div>
+            <div>
+              <label style="font-size:.85rem;color:var(--text-2);margin-bottom:.25rem;display:block">إلى الساعة</label>
+              <input type="time" id="openTimeEnd" class="search-input" value="03:00">
+            </div>
+            <button id="saveStoreStatusBtn" class="btn-primary" style="background:var(--darkred);color:white;padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer;height:42px;">حفظ المواعيد والحالة</button>
           </div>
         </div>
 

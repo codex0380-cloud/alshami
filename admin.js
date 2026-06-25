@@ -5,7 +5,7 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
   /* ---------- Config ---------- */
-  const PHONE_NUMBERS = ['01037775765', '01038437067'];
+  const PHONE_NUMBERS = ['01037775765'];
   
   const STATUS_MAP = {
     new: { label: 'جديد', badge: 'badge-new', icon: '🆕' },
@@ -227,6 +227,12 @@
     const statusSelect = $('#storeStatusSelect');
     if (statusSelect && adminSettings.store_status) {
       statusSelect.value = adminSettings.store_status;
+    }
+    const openTimeStart = $('#openTimeStart');
+    const openTimeEnd = $('#openTimeEnd');
+    if (openTimeStart && openTimeEnd && adminSettings.opening_hours) {
+      openTimeStart.value = adminSettings.opening_hours.start || '08:00';
+      openTimeEnd.value = adminSettings.opening_hours.end || '03:00';
     }
     const zonesList = $('#zonesList');
     if (zonesList && adminSettings.delivery_zones) {
@@ -1026,10 +1032,16 @@
     if (saveStoreStatusBtn) {
       saveStoreStatusBtn.addEventListener('click', () => {
         const status = $('#storeStatusSelect').value;
+        const start = $('#openTimeStart').value || '08:00';
+        const end = $('#openTimeEnd').value || '03:00';
+        
         if (typeof db !== 'undefined' && db) {
-          db.ref('settings/store_status').set(status)
-            .then(() => writeAuditLog('settings', 'store_status_change', { status }))
-            .then(() => showToast('تم حفظ حالة المطعم', 'success'));
+          db.ref('settings').update({
+            store_status: status,
+            opening_hours: { start, end }
+          })
+          .then(() => writeAuditLog('settings', 'store_status_change', { status, start, end }))
+          .then(() => showToast('تم حفظ حالة المطعم والمواعيد', 'success'));
         }
       });
     }

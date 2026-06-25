@@ -102,8 +102,11 @@ body { -webkit-font-smoothing: antialiased; }
 .dark .quick-card { background: rgba(28,28,28,.9); border-color: rgba(212,175,55,.15); }
 .quick-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 24px 50px -20px rgba(139,0,0,.45); border-color: #D4AF37; }
 .quick-ico {
-  display: grid; place-items: center; height: 60px; width: 60px; border-radius: 18px; font-size: 1.8rem;
+  display: grid; place-items: center; height: 50px; width: 50px; border-radius: 14px; font-size: 1.4rem;
   margin-bottom: .4rem; transition: transform .35s ease;
+}
+@media (min-width: 640px) {
+  .quick-ico { height: 60px; width: 60px; border-radius: 18px; font-size: 1.8rem; }
 }
 .quick-card:hover .quick-ico { transform: rotate(-8deg) scale(1.12); }
 
