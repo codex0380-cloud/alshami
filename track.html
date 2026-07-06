@@ -9,18 +9,18 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --darkred: #8B0000;
-      --darkred-2: #a30f0f;
-      --ink: #111111;
-      --ink-2: #1c1c1c;
-      --gold: #D4AF37;
-      --gold-soft: #e7cd77;
-      --beige: #F7F1E6;
-      --beige-2: #efe6d4;
+      --darkred: #c2410c;
+      --darkred-2: #e4590f;
+      --ink: #1b1410;
+      --ink-2: #261d17;
+      --gold: #f4a340;
+      --gold-soft: #f8c173;
+      --beige: #fbf7f0;
+      --beige-2: #f3ecdf;
       --green: #22c55e;
       --yellow: #eab308;
       --gray: #6b7280;
@@ -44,14 +44,14 @@
       background: var(--ink);
       padding: 1rem 1.5rem;
       text-align: center;
-      border-bottom: 2px solid var(--gold);
+      border-bottom: 2px solid var(--darkred);
     }
     .track-header a {
       display: inline-flex; align-items: center; gap: .5rem;
       text-decoration: none; color: var(--beige);
     }
     .track-header img { height: 40px; width: 40px; border-radius: 10px; object-fit: contain; }
-    .track-header span { font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 1.2rem; color: var(--gold); }
+    .track-header span { font-family: 'Alexandria', sans-serif; font-weight: 900; font-size: 1.2rem; color: var(--gold); }
 
     /* Main */
     .track-main {
@@ -74,7 +74,7 @@
       color: var(--beige);
     }
     .track-card-header h1 {
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Alexandria', sans-serif;
       font-weight: 900;
       font-size: 1.6rem;
       margin-bottom: .5rem;
@@ -86,7 +86,7 @@
       display: flex; flex-direction: column; gap: 1.2rem;
     }
     .track-label {
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Alexandria', sans-serif;
       font-weight: 700;
       font-size: .9rem;
       margin-bottom: .3rem;
@@ -97,7 +97,7 @@
       padding: .8rem 1rem;
       border-radius: 14px;
       border: 1.5px solid rgba(0,0,0,.12);
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Alexandria', sans-serif;
       font-size: 1rem;
       font-weight: 600;
       transition: all .2s;
@@ -106,7 +106,7 @@
     .track-input:focus {
       outline: none;
       border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(212,175,55,.2);
+      box-shadow: 0 0 0 3px rgba(244,163,64,.2);
     }
     .track-input::placeholder { color: #999; font-weight: 400; }
 
@@ -115,17 +115,17 @@
       width: 100%;
       padding: .9rem;
       border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-soft), #c79a25);
-      color: var(--ink);
-      font-family: 'Cairo', sans-serif;
+      border-radius: 999px;
+      background: var(--darkred);
+      color: var(--beige);
+      font-family: 'Alexandria', sans-serif;
       font-weight: 800;
       font-size: 1.05rem;
       cursor: pointer;
       transition: all .25s;
-      box-shadow: 0 8px 24px -8px rgba(212,175,55,.5);
+      box-shadow: 0 10px 26px -12px rgba(194,65,12,.7);
     }
-    .track-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px -8px rgba(212,175,55,.65); }
+    .track-btn:hover { transform: translateY(-2px); background: var(--darkred-2); box-shadow: 0 16px 34px -12px rgba(228,89,15,.8); }
     .track-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
     .track-error {
@@ -207,15 +207,15 @@
     }
     .timeline-step.current .timeline-icon {
       background: var(--gold);
-      box-shadow: 0 4px 16px rgba(212,175,55,.5);
+      box-shadow: 0 4px 16px rgba(244,163,64,.5);
       animation: pulse-current 2s infinite;
     }
     @keyframes pulse-current {
-      0%,100% { box-shadow: 0 4px 16px rgba(212,175,55,.5); }
-      50% { box-shadow: 0 4px 24px rgba(212,175,55,.8); }
+      0%,100% { box-shadow: 0 4px 16px rgba(244,163,64,.5); }
+      50% { box-shadow: 0 4px 24px rgba(244,163,64,.8); }
     }
     .timeline-label {
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Alexandria', sans-serif;
       font-weight: 700;
       font-size: .72rem;
       color: #999;
@@ -236,7 +236,7 @@
       padding: .8rem 1rem;
     }
     .detail-item small { display: block; color: #888; font-size: .75rem; margin-bottom: .2rem; }
-    .detail-item strong { font-family: 'Cairo', sans-serif; font-weight: 700; font-size: .95rem; }
+    .detail-item strong { font-family: 'Alexandria', sans-serif; font-weight: 700; font-size: .95rem; }
     .detail-item.full { grid-column: 1 / -1; }
 
     .items-list {
@@ -245,7 +245,7 @@
       padding-top: 1rem;
     }
     .items-list h3 {
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Alexandria', sans-serif;
       font-weight: 800;
       font-size: 1rem;
       margin-bottom: .8rem;
@@ -270,7 +270,7 @@
       border-radius: 14px;
       color: var(--beige);
     }
-    .total-row span:first-child { font-family: 'Cairo', sans-serif; font-weight: 700; }
+    .total-row span:first-child { font-family: 'Alexandria', sans-serif; font-weight: 700; }
     .total-row span:last-child { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--gold); }
 
     .back-btn {
@@ -282,7 +282,7 @@
       border-radius: 14px;
       background: none;
       color: var(--ink);
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Alexandria', sans-serif;
       font-weight: 700;
       font-size: .9rem;
       cursor: pointer;
@@ -309,7 +309,7 @@
       margin: 1rem 0;
     }
     .status-cancelled-msg .emoji { font-size: 2.5rem; margin-bottom: .5rem; }
-    .status-cancelled-msg p { color: #dc2626; font-weight: 700; font-family: 'Cairo', sans-serif; }
+    .status-cancelled-msg p { color: #dc2626; font-weight: 700; font-family: 'Alexandria', sans-serif; }
   </style>
 </head>
 <body>

@@ -594,7 +594,7 @@
       <title>إيصال طلب #${escapeHTML(order.orderNumber)}</title>
     <style>
       * { margin:0; padding:0; box-sizing:border-box; }
-      body { font-family: 'Cairo','Tajawal',sans-serif; padding:20px; font-size:13px; color:#111; max-width:380px; margin:0 auto; }
+      body { font-family: 'Alexandria','Tajawal',sans-serif; padding:20px; font-size:13px; color:#111; max-width:380px; margin:0 auto; }
       .header { text-align:center; border-bottom:2px dashed #333; padding-bottom:12px; margin-bottom:12px; }
       .header h1 { font-size:18px; margin-bottom:4px; }
       .header p { font-size:11px; color:#666; }
